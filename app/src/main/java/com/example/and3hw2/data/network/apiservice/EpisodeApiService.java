@@ -1,4 +1,4 @@
-package com.example.and3hw2.data.network;
+package com.example.and3hw2.data.network.apiservice;
 
 import com.example.and3hw2.model.Episode;
 import com.example.and3hw2.model.RickAndMortyResponse;

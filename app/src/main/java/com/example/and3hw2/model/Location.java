@@ -1,9 +1,13 @@
 package com.example.and3hw2.model;
 
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
 import com.google.gson.annotations.SerializedName;
 
+@Entity
 public class Location {
-
+    @PrimaryKey
     @SerializedName("id")
     private int id;
 

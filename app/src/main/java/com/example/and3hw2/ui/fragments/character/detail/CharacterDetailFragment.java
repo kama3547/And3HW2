@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.example.and3hw2.data.repositories.CharacterRepository;
 import com.example.and3hw2.databinding.FragmentCharacterDetailBinding;
 import com.example.and3hw2.ui.adapters.CharacterAdapter;
 import com.example.and3hw2.ui.fragments.character.CharacterViewModel;
@@ -21,7 +22,6 @@ public class CharacterDetailFragment extends Fragment {
 
     private FragmentCharacterDetailBinding binding;
     private CharacterViewModel viewModel;
-    private CharacterDetailFragmentArgs args;
     private int id;
 
     @Nullable
@@ -38,8 +38,6 @@ public class CharacterDetailFragment extends Fragment {
         setupArgs();
         setupRequests();
     }
-
-
 
     private void setupArgs() {
         id = CharacterDetailFragmentArgs.fromBundle(getArguments()).getPosition();

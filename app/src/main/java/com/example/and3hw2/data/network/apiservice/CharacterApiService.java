@@ -1,11 +1,10 @@
-package com.example.and3hw2.data.network;
+package com.example.and3hw2.data.network.apiservice;
 
 import com.example.and3hw2.model.Character;
 import com.example.and3hw2.model.RickAndMortyResponse;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface CharacterApiService extends EpisodeApiService {

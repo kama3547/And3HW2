@@ -1,5 +1,10 @@
 package com.example.and3hw2.ui.fragments.character;
 
+import static androidx.core.content.ContextCompat.getSystemService;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.room.Dao;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +23,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.and3hw2.R;
+import com.example.and3hw2.app.App;
+import com.example.and3hw2.data.repositories.CharacterRepository;
 import com.example.and3hw2.databinding.FragmentCharacterBinding;
 import com.example.and3hw2.model.Character;
 import com.example.and3hw2.model.RickAndMortyResponse;
@@ -32,7 +40,6 @@ public class CharacterFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         binding = FragmentCharacterBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
@@ -43,13 +50,27 @@ public class CharacterFragment extends Fragment {
         viewModel =
                 new ViewModelProvider(requireActivity()).get(CharacterViewModel.class);
         initialize();
-        setupRequests();
+        isConnectInternet();
+    }
+
+    private void isConnectInternet() {
+        boolean connected = false;
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
+            setupRequests();
+            connected = true;
+        } else {
+            characterAdapter.addList(viewModel.getCharacters());
+            connected = false;
+        }
     }
 
     private void setupRequests() {
         viewModel.fetchCharacters().observe(getViewLifecycleOwner(), characterRickAndMortyResponse ->
                 characterAdapter.addList(characterRickAndMortyResponse.getResults()));
     }
+
 
     private void initialize() {
         setupCharacterRecycler();

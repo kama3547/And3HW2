@@ -13,11 +13,12 @@ import com.example.and3hw2.model.Character;
 import com.example.and3hw2.model.Episode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeViewHolder> {
 
     private ItemEpisodesBinding binding;
-    private ArrayList<Episode> list = new ArrayList<>();
+    private List<Episode> list = new ArrayList<>();
 
     @NonNull
     @Override
@@ -35,7 +36,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
     public int getItemCount() {
         return list.size();
     }
-    public void addList(ArrayList<Episode> list){
+    public void addList(List<Episode> list){
         this.list = list;
         notifyDataSetChanged();
     }

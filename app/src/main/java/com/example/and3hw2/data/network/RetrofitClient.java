@@ -1,5 +1,9 @@
 package com.example.and3hw2.data.network;
 
+import com.example.and3hw2.data.network.apiservice.CharacterApiService;
+import com.example.and3hw2.data.network.apiservice.EpisodeApiService;
+import com.example.and3hw2.data.network.apiservice.LocationApiService;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;

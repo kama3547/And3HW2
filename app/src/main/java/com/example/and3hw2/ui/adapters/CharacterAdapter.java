@@ -13,12 +13,13 @@ import com.example.and3hw2.databinding.ItemCharacterBinding;
 import com.example.and3hw2.model.Character;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder> {
 
     private OnItemClick listener;
     private ItemCharacterBinding binding;
-    private ArrayList<Character> list = new ArrayList<>();
+    private List<Character> list = new ArrayList<>();
 
     @NonNull
     @Override
@@ -37,7 +38,7 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         return list.size();
     }
 
-    public void addList(ArrayList<Character> list){
+    public void addList(List<Character> list){
         this.list = list;
         notifyDataSetChanged();
     }

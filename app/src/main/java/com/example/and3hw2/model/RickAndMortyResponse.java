@@ -1,6 +1,5 @@
 package com.example.and3hw2.model;
 
-import android.icu.text.IDNA;
 
 import com.google.gson.annotations.SerializedName;
 

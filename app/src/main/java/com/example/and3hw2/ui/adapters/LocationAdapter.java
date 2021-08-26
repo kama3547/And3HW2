@@ -13,11 +13,12 @@ import com.example.and3hw2.model.Episode;
 import com.example.and3hw2.model.Location;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
 
     private ItemLocationBinding binding;
-    private ArrayList<Location> list = new ArrayList<>();
+    private List<Location> list = new ArrayList<>();
 
     @NonNull
     @Override
@@ -36,7 +37,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         return list.size();
     }
 
-    public void addList(ArrayList<Location> list){
+    public void addList(List<Location> list){
         this.list = list;
         notifyDataSetChanged();
     }
