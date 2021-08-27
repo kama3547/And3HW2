@@ -10,22 +10,27 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.and3hw2.R;
+import com.example.and3hw2.base.BaseFragment;
 import com.example.and3hw2.databinding.FragmentLocationBinding;
 import com.example.and3hw2.ui.adapters.LocationAdapter;
 
 
-public class LocationFragment extends Fragment {
+public class LocationFragment extends BaseFragment<LocationViewModel,FragmentLocationBinding> {
 
    private LocationAdapter locationAdapter = new LocationAdapter();
    private LocationViewModel viewModel;
    private FragmentLocationBinding binding;
-
+   private int visibleItemCount;
+   private int totalItemCount;
+   private int pastVisiblesItems;
+   public LinearLayoutManager linearLayoutManager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -36,36 +41,59 @@ public class LocationFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
-        initalize();
         isConnectInternet();
     }
 
-    private void setupRequests() {
-        viewModel.fetchLocations().observe(getViewLifecycleOwner(),locationRickAndMortyResponse -> {
-            locationAdapter.addList(locationRickAndMortyResponse.getResults());
-        });
-    }
 
-    private void isConnectInternet() {
+    @Override
+    protected void isConnectInternet() {
+        super.isConnectInternet();
         boolean connected = false;
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            setupRequests();
+            setUpRequests();
             connected = true;
         } else {
             locationAdapter.addList(viewModel.getLocations());
             connected = false;
         }
     }
-
-    private void initalize() {
+    @Override
+    protected void initialize() {
+        super.initialize();
         setupLocationRecycler();
+        viewModel = new ViewModelProvider(requireActivity()).get(LocationViewModel.class);
     }
 
     private void setupLocationRecycler() {
-        binding.recyclerLocation.setLayoutManager(new LinearLayoutManager(requireContext()));
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        binding.recyclerLocation.setLayoutManager(linearLayoutManager);
         binding.recyclerLocation.setAdapter(locationAdapter);
+    }
+
+    @Override
+    protected void setUpRequests() {
+        super.setUpRequests();
+        viewModel.fetchLocations().observe(getViewLifecycleOwner(), locationRickAndMortyResponse -> {
+            locationAdapter.addList(locationRickAndMortyResponse.getResults());
+        });
+        binding.recyclerLocation.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0){
+                    visibleItemCount = linearLayoutManager.getChildCount();
+                    totalItemCount = linearLayoutManager.getItemCount();
+                    pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount){
+                        viewModel.page++;
+                        viewModel.fetchLocations().observe(getViewLifecycleOwner(),characterRickAndMortyResponse -> {
+                            locationAdapter.addList(characterRickAndMortyResponse.getResults());
+                        });
+                    }
+                }
+            }
+        });
     }
 }

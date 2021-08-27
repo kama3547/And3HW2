@@ -12,13 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.example.and3hw2.base.BaseFragment;
 import com.example.and3hw2.data.repositories.CharacterRepository;
 import com.example.and3hw2.databinding.FragmentCharacterDetailBinding;
 import com.example.and3hw2.ui.adapters.CharacterAdapter;
 import com.example.and3hw2.ui.fragments.character.CharacterViewModel;
 
 
-public class CharacterDetailFragment extends Fragment {
+public class CharacterDetailFragment extends BaseFragment<CharacterViewModel,FragmentCharacterDetailBinding> {
 
     private FragmentCharacterDetailBinding binding;
     private CharacterViewModel viewModel;
@@ -34,18 +35,25 @@ public class CharacterDetailFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(CharacterViewModel.class);
         setupArgs();
-        setupRequests();
     }
 
     private void setupArgs() {
         id = CharacterDetailFragmentArgs.fromBundle(getArguments()).getPosition();
     }
-    private void setupRequests() {
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        viewModel = new ViewModelProvider(requireActivity()).get(CharacterViewModel.class);
+    }
+
+    @Override
+    protected void setUpRequests() {
+        super.setUpRequests();
         viewModel.fetchData(id).observe(getViewLifecycleOwner(),character -> {
-            Glide.with(binding.imageItemCharacterD)
-                   .load(character.getImage())
+                Glide.with(binding.imageItemCharacterD)
+                     .load(character.getImage())
                     .into(binding.imageItemCharacterD);
             binding.textItemCharacter1.setText(character.getName());
             binding.textItemCharacter2.setText(character.getStatus());
@@ -54,4 +62,5 @@ public class CharacterDetailFragment extends Fragment {
             binding.textItemCharacter5.setText(character.getCreated());
         });
     }
-    }
+}
+

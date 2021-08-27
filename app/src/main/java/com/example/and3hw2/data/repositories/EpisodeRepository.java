@@ -15,13 +15,16 @@ import retrofit2.Response;
 
 public class EpisodeRepository {
 
-   public MutableLiveData<RickAndMortyResponse<Episode>> fetchEpisodes(){
+    int page;
+   public MutableLiveData<RickAndMortyResponse<Episode>> fetchEpisodes(int page){
         MutableLiveData<RickAndMortyResponse<Episode>> data = new MutableLiveData<>();
-        App.episodeApiService.fetchEpisodes().enqueue(new Callback<RickAndMortyResponse<Episode>>() {
+        App.episodeApiService.fetchEpisodes(page).enqueue(new Callback<RickAndMortyResponse<Episode>>() {
             @Override
             public void onResponse(Call<RickAndMortyResponse<Episode>> call, Response<RickAndMortyResponse<Episode>> response) {
-                App.episodeDao.insertAll(response.body().getResults());
-                data.postValue(response.body());
+                if (response.body() !=null){
+                    App.episodeDao.insertAll(response.body().getResults());
+                    data.postValue(response.body());
+                }
             }
 
             @Override

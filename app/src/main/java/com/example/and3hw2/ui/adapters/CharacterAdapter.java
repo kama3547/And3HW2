@@ -18,14 +18,15 @@ import java.util.List;
 public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.CharacterViewHolder> {
 
     private OnItemClick listener;
-    private ItemCharacterBinding binding;
     private List<Character> list = new ArrayList<>();
+
+
+
 
     @NonNull
     @Override
     public CharacterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        binding = ItemCharacterBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new CharacterViewHolder(binding.getRoot()) ;
+        return new CharacterViewHolder(ItemCharacterBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -39,17 +40,16 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
     }
 
     public void addList(List<Character> list){
-        this.list = list;
+        this.list.addAll(list);
         notifyDataSetChanged();
     }
 
     class CharacterViewHolder extends RecyclerView.ViewHolder{
+        ItemCharacterBinding binding;
 
-
-        public CharacterViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-
+        public CharacterViewHolder(ItemCharacterBinding binding) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
         private void onBind(Character item) {
