@@ -19,7 +19,7 @@ import com.example.and3hw2.ui.adapters.CharacterAdapter;
 import com.example.and3hw2.ui.fragments.character.CharacterViewModel;
 
 
-public class CharacterDetailFragment extends BaseFragment<CharacterViewModel,FragmentCharacterDetailBinding> {
+public class CharacterDetailFragment extends BaseFragment<CharacterViewModel, FragmentCharacterDetailBinding> {
 
     private FragmentCharacterDetailBinding binding;
     private CharacterViewModel viewModel;
@@ -51,9 +51,9 @@ public class CharacterDetailFragment extends BaseFragment<CharacterViewModel,Fra
     @Override
     protected void setUpRequests() {
         super.setUpRequests();
-        viewModel.fetchData(id).observe(getViewLifecycleOwner(),character -> {
-                Glide.with(binding.imageItemCharacterD)
-                     .load(character.getImage())
+        viewModel.fetchData(id).observe(getViewLifecycleOwner(), character -> {
+            Glide.with(binding.imageItemCharacterD)
+                    .load(character.getImage())
                     .into(binding.imageItemCharacterD);
             binding.textItemCharacter1.setText(character.getName());
             binding.textItemCharacter2.setText(character.getStatus());

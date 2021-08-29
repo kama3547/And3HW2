@@ -36,7 +36,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         return list.size();
     }
 
-    public void addList(List<Location> list){
+    public void addList(List<Location> list) {
         this.list = list;
         notifyDataSetChanged();
     }
@@ -44,11 +44,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     public class LocationViewHolder extends RecyclerView.ViewHolder {
         ItemLocationBinding binding;
 
-        public LocationViewHolder(@NonNull  ItemLocationBinding binding) {
+        public LocationViewHolder(@NonNull ItemLocationBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
-        private void onBind(Location item){
+
+        private void onBind(Location item) {
             binding.itemLocation.setText(item.getName());
             binding.itemLocation2.setText(item.getType());
             binding.itemLocation3.setText(item.getDimension());

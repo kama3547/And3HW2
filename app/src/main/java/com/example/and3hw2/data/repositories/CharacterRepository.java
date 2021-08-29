@@ -22,13 +22,13 @@ public class CharacterRepository {
             public void onResponse(Call<RickAndMortyResponse<Character>> call, Response<RickAndMortyResponse<Character>> response) {
                 if (response.body() != null) {
                     App.characterDao.insertAll(response.body().getResults());
-                    data.postValue(response.body());
+                    data.setValue(response.body());
                 }
             }
 
             @Override
             public void onFailure(Call<RickAndMortyResponse<Character>> call, Throwable t) {
-                data.postValue(null);
+                data.setValue(null);
             }
         });
         return data;
@@ -40,8 +40,7 @@ public class CharacterRepository {
         App.characterApiService.fetCharactersId(id).enqueue(new Callback<Character>() {
             @Override
             public void onResponse(Call<Character> call, Response<Character> response) {
-                dataId.setValue(response.body());
-
+                    dataId.setValue(response.body());
             }
 
             @Override

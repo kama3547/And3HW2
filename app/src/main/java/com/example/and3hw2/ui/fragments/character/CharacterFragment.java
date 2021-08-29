@@ -62,7 +62,9 @@ public class CharacterFragment extends BaseFragment<CharacterViewModel, Fragment
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            setUpRequests();
+            viewModel.fetchCharacters().observe(getViewLifecycleOwner(),characterRickAndMortyResponse -> {
+                characterAdapter.addList(characterRickAndMortyResponse.getResults());
+            });
         } else {
             characterAdapter.addList(viewModel.getCharacters());
         }
@@ -89,9 +91,6 @@ public class CharacterFragment extends BaseFragment<CharacterViewModel, Fragment
     @Override
     protected void setUpRequests() {
         super.setUpRequests();
-        viewModel.fetchCharacters().observe(getViewLifecycleOwner(), characterRickAndMortyResponse -> {
-            characterAdapter.addList(characterRickAndMortyResponse.getResults());
-        });
         binding.recyclerCharacter.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

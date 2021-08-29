@@ -20,9 +20,6 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
     private OnItemClick listener;
     private List<Character> list = new ArrayList<>();
 
-
-
-
     @NonNull
     @Override
     public CharacterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -39,12 +36,12 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
         return list.size();
     }
 
-    public void addList(List<Character> list){
+    public void addList(List<Character> list) {
         this.list.addAll(list);
         notifyDataSetChanged();
     }
 
-    class CharacterViewHolder extends RecyclerView.ViewHolder{
+    class CharacterViewHolder extends RecyclerView.ViewHolder {
         ItemCharacterBinding binding;
 
         public CharacterViewHolder(ItemCharacterBinding binding) {
@@ -64,10 +61,13 @@ public class CharacterAdapter extends RecyclerView.Adapter<CharacterAdapter.Char
             });
         }
     }
-   public interface OnItemClick {
+
+    public interface OnItemClick {
         void onItemClick(int position);
     }
-    public void setOnItemClickListener(OnItemClick listener){
+
+
+    public void setOnItemClickListener(OnItemClick listener) {
         this.listener = listener;
     }
-    }
+}

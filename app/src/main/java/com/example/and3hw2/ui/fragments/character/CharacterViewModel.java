@@ -24,7 +24,7 @@ public class CharacterViewModel extends BaseViewModel {
         return repository.fetchData(id);
     }
 
-    List<Character> getCharacters() {
+   public List<Character> getCharacters() {
         return repository.getCharacters();
     }
 }

@@ -22,19 +22,20 @@ import com.example.and3hw2.databinding.FragmentLocationBinding;
 import com.example.and3hw2.ui.adapters.LocationAdapter;
 
 
-public class LocationFragment extends BaseFragment<LocationViewModel,FragmentLocationBinding> {
+public class LocationFragment extends BaseFragment<LocationViewModel, FragmentLocationBinding> {
 
-   private LocationAdapter locationAdapter = new LocationAdapter();
-   private LocationViewModel viewModel;
-   private FragmentLocationBinding binding;
-   private int visibleItemCount;
-   private int totalItemCount;
-   private int pastVisiblesItems;
-   public LinearLayoutManager linearLayoutManager;
+    private LocationAdapter locationAdapter = new LocationAdapter();
+    private LocationViewModel viewModel;
+    private FragmentLocationBinding binding;
+    private int visibleItemCount;
+    private int totalItemCount;
+    private int pastVisiblesItems;
+    public LinearLayoutManager linearLayoutManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentLocationBinding.inflate(inflater,container,false);
+        binding = FragmentLocationBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -48,17 +49,17 @@ public class LocationFragment extends BaseFragment<LocationViewModel,FragmentLoc
     @Override
     protected void isConnectInternet() {
         super.isConnectInternet();
-        boolean connected = false;
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            setUpRequests();
-            connected = true;
+            viewModel.fetchLocations().observe(getViewLifecycleOwner(), locationRickAndMortyResponse -> {
+                locationAdapter.addList(locationRickAndMortyResponse.getResults());
+            });
         } else {
             locationAdapter.addList(viewModel.getLocations());
-            connected = false;
         }
     }
+
     @Override
     protected void initialize() {
         super.initialize();
@@ -75,20 +76,18 @@ public class LocationFragment extends BaseFragment<LocationViewModel,FragmentLoc
     @Override
     protected void setUpRequests() {
         super.setUpRequests();
-        viewModel.fetchLocations().observe(getViewLifecycleOwner(), locationRickAndMortyResponse -> {
-            locationAdapter.addList(locationRickAndMortyResponse.getResults());
-        });
+
         binding.recyclerLocation.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0){
+                if (dy > 0) {
                     visibleItemCount = linearLayoutManager.getChildCount();
                     totalItemCount = linearLayoutManager.getItemCount();
                     pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount){
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         viewModel.page++;
-                        viewModel.fetchLocations().observe(getViewLifecycleOwner(),characterRickAndMortyResponse -> {
+                        viewModel.fetchLocations().observe(getViewLifecycleOwner(), characterRickAndMortyResponse -> {
                             locationAdapter.addList(characterRickAndMortyResponse.getResults());
                         });
                     }

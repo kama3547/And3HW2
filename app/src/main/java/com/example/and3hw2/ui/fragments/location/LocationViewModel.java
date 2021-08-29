@@ -22,9 +22,10 @@ public class LocationViewModel extends BaseViewModel {
     private final LocationRepository repository = new LocationRepository();
 
     MutableLiveData<RickAndMortyResponse<Location>> fetchLocations() {
-     return repository.fetchLocations(page);
+        return repository.fetchLocations(page);
     }
-    List<Location> getLocations(){
+
+   public List<Location> getLocations() {
         return repository.getLocation();
     }
 }

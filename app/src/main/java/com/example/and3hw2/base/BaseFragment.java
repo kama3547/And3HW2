@@ -26,18 +26,15 @@ public abstract class BaseFragment<ViewModel extends BaseViewModel, Binding exte
     }
 
     protected  void isConnectInternet(){
-
     }
 
     protected void setUpObserves(){
-
     }
-    protected  void setUpRequests(){
 
+    protected  void setUpRequests(){
     }
 
     protected  void initialize(){
-
     }
 
 }

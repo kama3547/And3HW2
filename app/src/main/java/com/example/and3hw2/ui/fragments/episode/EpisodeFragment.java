@@ -31,6 +31,7 @@ public class EpisodeFragment extends BaseFragment<EpisodeViewModel, FragmentEpis
     private int visibleItemCount;
     private int totalItemCount;
     private int pastVisiblesItems;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,15 +48,14 @@ public class EpisodeFragment extends BaseFragment<EpisodeViewModel, FragmentEpis
     @Override
     protected void isConnectInternet() {
         super.isConnectInternet();
-        boolean connected = false;
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
                 connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            setUpRequests();
-            connected = true;
+            viewModel.fetchEpisodes().observe(getViewLifecycleOwner(), episodeRickAndMortyResponse -> {
+                episodeAdapter.addList(episodeRickAndMortyResponse.getResults());
+            });
         } else {
             episodeAdapter.addList(viewModel.getEpisodes());
-            connected = false;
         }
     }
 
@@ -69,21 +69,17 @@ public class EpisodeFragment extends BaseFragment<EpisodeViewModel, FragmentEpis
     @Override
     protected void setUpRequests() {
         super.setUpRequests();
-
-        viewModel.fetchEpisodes().observe(getViewLifecycleOwner(), episodeRickAndMortyResponse -> {
-            episodeAdapter.addList(episodeRickAndMortyResponse.getResults());
-        });
         binding.recyclerEpisode.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if (dy > 0){
+                if (dy > 0) {
                     visibleItemCount = linearLayoutManager.getChildCount();
                     totalItemCount = linearLayoutManager.getItemCount();
                     pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
-                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount){
+                    if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         viewModel.page++;
-                        viewModel.fetchEpisodes().observe(getViewLifecycleOwner(),characterRickAndMortyResponse -> {
+                        viewModel.fetchEpisodes().observe(getViewLifecycleOwner(), characterRickAndMortyResponse -> {
                             episodeAdapter.addList(characterRickAndMortyResponse.getResults());
                         });
                     }

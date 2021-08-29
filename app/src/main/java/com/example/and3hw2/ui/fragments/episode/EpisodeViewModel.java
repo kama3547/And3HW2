@@ -15,11 +15,11 @@ public class EpisodeViewModel extends BaseViewModel {
     public int page = 1;
     private final EpisodeRepository repository = new EpisodeRepository();
 
-    MutableLiveData<RickAndMortyResponse<Episode>> fetchEpisodes(){
-     return repository.fetchEpisodes(page);
+    MutableLiveData<RickAndMortyResponse<Episode>> fetchEpisodes() {
+        return repository.fetchEpisodes(page);
     }
 
-    List<Episode> getEpisodes() {
+    public List<Episode> getEpisodes() {
         return repository.getEpisode();
     }
 }
