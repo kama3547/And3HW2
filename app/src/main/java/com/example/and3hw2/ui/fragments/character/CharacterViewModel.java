@@ -1,9 +1,7 @@
 package com.example.and3hw2.ui.fragments.character;
 
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.and3hw2.app.App;
 import com.example.and3hw2.base.BaseViewModel;
 import com.example.and3hw2.data.repositories.CharacterRepository;
 import com.example.and3hw2.model.Character;

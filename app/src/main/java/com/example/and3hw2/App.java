@@ -1,4 +1,4 @@
-package com.example.and3hw2.app;
+package com.example.and3hw2;
 
 import android.app.Application;
 

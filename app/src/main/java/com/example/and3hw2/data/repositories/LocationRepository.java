@@ -2,8 +2,7 @@ package com.example.and3hw2.data.repositories;
 
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.and3hw2.app.App;
-import com.example.and3hw2.model.Episode;
+import com.example.and3hw2.App;
 import com.example.and3hw2.model.Location;
 import com.example.and3hw2.model.RickAndMortyResponse;
 

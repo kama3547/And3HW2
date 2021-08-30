@@ -46,7 +46,7 @@ public class EpisodeFragment extends BaseFragment<EpisodeViewModel, FragmentEpis
     }
 
     @Override
-    protected void isConnectInternet() {
+    protected boolean isConnectInternet() {
         super.isConnectInternet();
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
@@ -57,6 +57,7 @@ public class EpisodeFragment extends BaseFragment<EpisodeViewModel, FragmentEpis
         } else {
             episodeAdapter.addList(viewModel.getEpisodes());
         }
+        return false;
     }
 
     @Override

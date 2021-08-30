@@ -47,7 +47,7 @@ public class LocationFragment extends BaseFragment<LocationViewModel, FragmentLo
 
 
     @Override
-    protected void isConnectInternet() {
+    protected boolean isConnectInternet() {
         super.isConnectInternet();
         ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
@@ -58,6 +58,7 @@ public class LocationFragment extends BaseFragment<LocationViewModel, FragmentLo
         } else {
             locationAdapter.addList(viewModel.getLocations());
         }
+        return false;
     }
 
     @Override
@@ -76,7 +77,6 @@ public class LocationFragment extends BaseFragment<LocationViewModel, FragmentLo
     @Override
     protected void setUpRequests() {
         super.setUpRequests();
-
         binding.recyclerLocation.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {

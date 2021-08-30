@@ -1,5 +1,9 @@
 package com.example.and3hw2.base;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,7 +15,7 @@ import androidx.viewbinding.ViewBinding;
 
 import com.example.and3hw2.ui.adapters.CharacterAdapter;
 
-public abstract class BaseFragment<ViewModel extends BaseViewModel, Binding extends ViewBinding > extends Fragment {
+public abstract class BaseFragment<ViewModel extends BaseViewModel, Binding extends ViewBinding> extends Fragment {
 
     protected ViewModel viewModel;
     protected Binding binding;
@@ -25,16 +29,19 @@ public abstract class BaseFragment<ViewModel extends BaseViewModel, Binding exte
         isConnectInternet();
     }
 
-    protected  void isConnectInternet(){
+    protected void initialize() {
     }
 
-    protected void setUpObserves(){
+    protected void setUpRequests() {
     }
 
-    protected  void setUpRequests(){
+    protected void setUpObserves() {
     }
 
-    protected  void initialize(){
+    protected boolean isConnectInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        return connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
+                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED;
+        }
     }
 
-}
