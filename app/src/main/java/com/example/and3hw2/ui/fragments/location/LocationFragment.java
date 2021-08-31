@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.example.and3hw2.R;
 import com.example.and3hw2.base.BaseFragment;
 import com.example.and3hw2.databinding.FragmentLocationBinding;
+import com.example.and3hw2.ui.adapters.CharacterAdapter;
 import com.example.and3hw2.ui.adapters.LocationAdapter;
 
 
@@ -40,28 +41,6 @@ public class LocationFragment extends BaseFragment<LocationViewModel, FragmentLo
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        isConnectInternet();
-    }
-
-
-    @Override
-    protected boolean isConnectInternet() {
-        super.isConnectInternet();
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            viewModel.fetchLocations().observe(getViewLifecycleOwner(), locationRickAndMortyResponse -> {
-                locationAdapter.addList(locationRickAndMortyResponse.getResults());
-            });
-        } else {
-            locationAdapter.addList(viewModel.getLocations());
-        }
-        return false;
-    }
-
-    @Override
     protected void initialize() {
         super.initialize();
         setupLocationRecycler();
@@ -77,6 +56,9 @@ public class LocationFragment extends BaseFragment<LocationViewModel, FragmentLo
     @Override
     protected void setUpRequests() {
         super.setUpRequests();
+        if (!connectInternet()) {
+            locationAdapter.submitList(viewModel.getLocations());
+        }
         binding.recyclerLocation.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -87,12 +69,21 @@ public class LocationFragment extends BaseFragment<LocationViewModel, FragmentLo
                     pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         viewModel.page++;
-                        viewModel.fetchLocations().observe(getViewLifecycleOwner(), characterRickAndMortyResponse -> {
-                            locationAdapter.addList(characterRickAndMortyResponse.getResults());
-                        });
+                        connectInternet();
                     }
                 }
             }
         });
+    }
+
+    private boolean connectInternet() {
+        if (isConnectInternet()) {
+            viewModel.fetchLocations().observe(getViewLifecycleOwner(), locationRickAndMortyResponse -> {
+                locationAdapter.submitList(locationRickAndMortyResponse.getResults());
+            });
+            return true;
+        } else {
+            return false;
+        }
     }
 }

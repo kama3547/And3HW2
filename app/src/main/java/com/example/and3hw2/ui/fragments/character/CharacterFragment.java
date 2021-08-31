@@ -40,21 +40,6 @@ public class CharacterFragment extends BaseFragment<CharacterViewModel, Fragment
     }
 
     @Override
-    protected boolean isConnectInternet() {
-        super.isConnectInternet();
-        ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||
-                connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState() == NetworkInfo.State.CONNECTED) {
-            viewModel.fetchCharacters().observe(getViewLifecycleOwner(), characterRickAndMortyResponse -> {
-                characterAdapter.addList(characterRickAndMortyResponse.getResults());
-            });
-        } else {
-            characterAdapter.addList(viewModel.getCharacters());
-        }
-        return false;
-    }
-
-    @Override
     protected void initialize() {
         super.initialize();
         viewModel = new ViewModelProvider(requireActivity()).get(CharacterViewModel.class);
@@ -74,6 +59,9 @@ public class CharacterFragment extends BaseFragment<CharacterViewModel, Fragment
     @Override
     protected void setUpRequests() {
         super.setUpRequests();
+        if (!connectInternet()) {
+            characterAdapter.submitList(viewModel.getCharacters());
+        }
         binding.recyclerCharacter.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -84,12 +72,21 @@ public class CharacterFragment extends BaseFragment<CharacterViewModel, Fragment
                     pastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
                     if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
                         viewModel.page++;
-                        viewModel.fetchCharacters().observe(getViewLifecycleOwner(), characterRickAndMortyResponse -> {
-                            characterAdapter.addList(characterRickAndMortyResponse.getResults());
-                        });
+                        connectInternet();
                     }
                 }
             }
         });
+    }
+
+    private boolean connectInternet() {
+        if (isConnectInternet()) {
+            viewModel.fetchCharacters().observe(getViewLifecycleOwner(), characterRickAndMortyResponse -> {
+                characterAdapter.submitList(characterRickAndMortyResponse.getResults());
+            });
+            return true;
+        } else {
+            return false;
+        }
     }
 }

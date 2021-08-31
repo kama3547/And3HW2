@@ -23,23 +23,12 @@ public class CharacterDetailFragment extends BaseFragment<CharacterViewModel, Fr
 
     private FragmentCharacterDetailBinding binding;
     private CharacterViewModel viewModel;
-    private int id;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentCharacterDetailBinding.inflate(inflater, container, false);
         return binding.getRoot();
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setupArgs();
-    }
-
-    private void setupArgs() {
-        id = CharacterDetailFragmentArgs.fromBundle(getArguments()).getPosition();
     }
 
     @Override
@@ -51,7 +40,9 @@ public class CharacterDetailFragment extends BaseFragment<CharacterViewModel, Fr
     @Override
     protected void setUpRequests() {
         super.setUpRequests();
-        viewModel.fetchData(id).observe(getViewLifecycleOwner(), character -> {
+        viewModel.fetchData(
+                CharacterDetailFragmentArgs.fromBundle(getArguments()).getPosition()
+        ).observe(getViewLifecycleOwner(), character -> {
             Glide.with(binding.imageItemCharacterD)
                     .load(character.getImage())
                     .into(binding.imageItemCharacterD);

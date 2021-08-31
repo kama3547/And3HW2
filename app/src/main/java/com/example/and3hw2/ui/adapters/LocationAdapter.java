@@ -1,10 +1,13 @@
 package com.example.and3hw2.ui.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.and3hw2.databinding.ItemEpisodesBinding;
@@ -15,31 +18,38 @@ import com.example.and3hw2.model.Location;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationViewHolder> {
+public class LocationAdapter extends ListAdapter<Location, LocationAdapter.LocationViewHolder> {
 
 
-    private List<Location> list = new ArrayList<>();
+    public static class LocationDiffUtil extends DiffUtil.ItemCallback<Location> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Location oldItem, @NonNull Location newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
+
+        @SuppressLint("DiffUtilEquals")
+        @Override
+        public boolean areContentsTheSame(@NonNull Location oldItem, @NonNull Location newItem) {
+            return oldItem == newItem;
+        }
+    }
+
+    public LocationAdapter() {
+        super(new LocationDiffUtil());
+    }
 
     @NonNull
     @Override
-    public LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public LocationAdapter.LocationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new LocationViewHolder(ItemLocationBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LocationViewHolder holder, int position) {
-        holder.onBind(list.get(position));
+    public void onBindViewHolder(@NonNull LocationAdapter.LocationViewHolder holder, int position) {
+        holder.onBind(getItem(position));
     }
 
-    @Override
-    public int getItemCount() {
-        return list.size();
-    }
-
-    public void addList(List<Location> list) {
-        this.list = list;
-        notifyDataSetChanged();
-    }
 
     public class LocationViewHolder extends RecyclerView.ViewHolder {
         ItemLocationBinding binding;
@@ -55,7 +65,5 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
             binding.itemLocation3.setText(item.getDimension());
             binding.itemLocation4.setText(item.getCreated());
         }
-
-
     }
 }
