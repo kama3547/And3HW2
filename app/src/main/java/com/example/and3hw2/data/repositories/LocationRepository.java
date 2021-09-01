@@ -14,7 +14,6 @@ import retrofit2.Response;
 
 public class LocationRepository  {
 
-    int page;
    public MutableLiveData<RickAndMortyResponse<Location>> fetchLocations( int page){
         MutableLiveData<RickAndMortyResponse<Location>> data = new MutableLiveData<>();
         App.locationApiService.fetchLocations(page).enqueue(new Callback<RickAndMortyResponse<Location>>() {
